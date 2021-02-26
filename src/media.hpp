@@ -1,0 +1,15 @@
+#include <cairo.h>
+#include "element.hpp"
+#include "utils.hpp"
+
+class Image: public Element {
+public:
+    Image(char* src,float x, float y, float width, float height, float opacity, bool responsive, bool hide_overflow, char* fit, char* align, int z_index);
+    void draw(cairo_t * cr, float t) override;
+private:
+    float width;
+    float height;
+    bool hide_overflow;
+    cairo_surface_t *image;
+    layout::fit fit;
+};
