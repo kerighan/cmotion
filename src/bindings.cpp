@@ -25,6 +25,9 @@ PYBIND11_MODULE(cmotion, m)  {
         .def("add", &Scene::add)
         .def("get_end", &Scene::get_end)
         .def("resize", &Scene::resize)
+        .def("save", &Scene::save,
+             py::arg("filename"),
+             py::arg("t") = 0)
         .def("render", &Scene::render,
              py::arg("filename"),
              py::arg("fps") = 25,
@@ -38,7 +41,7 @@ PYBIND11_MODULE(cmotion, m)  {
 
     // text submodule
     py::class_<Text, Element>(m_text, "Text")
-        .def(py::init<std::string&, float, float, float, float, float, float, std::string, float, bool, char*, int>(),
+        .def(py::init<std::string&, float, float, float, float, float, float, char*, std::string, float, bool, char*, int>(),
              py::arg("txt"),
              py::arg("x") = 50,
              py::arg("y") = 50,
@@ -46,6 +49,7 @@ PYBIND11_MODULE(cmotion, m)  {
              py::arg("size") = 10,
              py::arg("line_height") = .5,
              py::arg("space_size") = .5,
+             py::arg("font_family") = "OpenSans-Light.ttf",
              py::arg("color") = "#FFFFFF",
              py::arg("opacity") = 1,
              py::arg("responsive") = true,

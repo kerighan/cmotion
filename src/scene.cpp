@@ -47,6 +47,41 @@ float Scene::get_end(){
 }
 
 
+void Scene::save(std::string filename, float t){
+    // sort layers
+    std::sort(this->layers.begin(), this->layers.end(), z_sort);
+
+    // get background color
+    float r = std::get<0>(this->color);
+    float g = std::get<1>(this->color);
+    float b = std::get<2>(this->color);
+
+    // create master surface to draw onto
+    cairo_surface_t *surface;
+    cairo_t *cr;
+    surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, this->width, this->height);
+    cr = cairo_create(surface);
+    cairo_set_antialias(cr, CAIRO_ANTIALIAS_BEST);
+
+    // add background
+    cairo_rectangle(cr, 0, 0, this->width, this->height);
+    cairo_set_source_rgb(cr, r, g, b);
+    cairo_fill(cr);
+
+    // render frame
+    for (size_t j = 0; j < this->layers.size(); j++){
+        this->layers[j]->draw(cr, t);
+    }
+
+    // render frame
+    cairo_image_surface_write_to_jpeg(surface, filename.c_str(), 100);
+
+    // free surface and context
+    cairo_destroy(cr);
+    cairo_surface_destroy(surface);
+}
+
+
 void Scene::render(std::string filename, int fps, int quality, int antialias){
     // extension
     const std::string ext = std::string(".jpg");

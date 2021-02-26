@@ -9,6 +9,7 @@ public:
     Scene(int width, int height, std::string color);
     void add(Element* element);
     void render(std::string filename, int fps, int quality, int antialias);
+    void save(std::string filename, float t);
     void resize(int width, int height);
     float get_end();
 

@@ -27,7 +27,7 @@ using LinesBBox = std::vector<std::unordered_map<std::string, float>>;
 // ============================================================================
 class Text: public Element {
 public:
-    Text(std::string& txt,float x, float y, float width, float size, float line_height, float space_size, std::string color, float opacity, bool responsive, char* align, int z_index);
+    Text(std::string& txt,float x, float y, float width, float size, float line_height, float space_size, char* filename, std::string color, float opacity, bool responsive, char* align, int z_index);
 
     float get_end() override;
     void on_resize() override;

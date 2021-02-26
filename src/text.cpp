@@ -12,7 +12,7 @@
 #include FT_TYPE1_TABLES_H
 
 
-Text::Text(std::string& txt,float x, float y, float width, float size, float line_height, float space_size, const std::string color, float opacity, bool responsive, char* align, int z_index){
+Text::Text(std::string& txt,float x, float y, float width, float size, float line_height, float space_size, char* filename, const std::string color, float opacity, bool responsive, char* align, int z_index){
     this->txt = txt;
     this->x = x;
     this->y = y;
@@ -33,7 +33,7 @@ Text::Text(std::string& txt,float x, float y, float width, float size, float lin
     FT_Face face;
     FT_Error status;
     FT_Library value;
-    const char * filename = "OpenSans-Light.ttf";
+    // const char * filename = "OpenSans-Light.ttf";
     status = FT_Init_FreeType(& value);
     if (status != 0) {
         fprintf (stderr, "Error %d opening library.\n", status);

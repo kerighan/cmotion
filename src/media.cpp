@@ -60,7 +60,6 @@ void Image::draw(cairo_t* cr, float t){
     }
     w *= ratio;
     h *= ratio;
-
     adapt_to_alignment(this->align, &x, &y, &w, &h);
 
     cairo_translate(cr, x, y);
@@ -70,8 +69,9 @@ void Image::draw(cairo_t* cr, float t){
     cairo_set_source_surface(cr, this->image, 0, 0);
 
     // scale back
-    cairo_scale (cr, 1/ratio, 1/ratio);
+    cairo_scale(cr, 1./ratio, 1./ratio);
     cairo_translate(cr, -x, -y);
+
 
     // clip if overflow is hidden
     if (this->hide_overflow){
@@ -86,4 +86,5 @@ void Image::draw(cairo_t* cr, float t){
     } else {
         cairo_paint(cr);
     }
+    cairo_reset_clip(cr);
 }
