@@ -9,7 +9,9 @@ public:
     Scene(int width, int height, std::string color);
     void add(Element* element);
     void render(std::string filename, int fps, int quality, int antialias);
+    void at(cairo_surface_t *surface, cairo_t *cr, float t);
     void save(std::string filename, float t);
+    void to_svg(std::string filename, float t);
     void resize(int width, int height);
     float get_end();
 

@@ -2,11 +2,10 @@ import subprocess
 import os
 
 
-def frames_to_video(in_folder, out_file, frame_rate=24):
+def frames_to_video(in_folder, out_file, frame_rate=24, crf=23):
     file_format = "jpg"
-    preset = "fastest"
+    preset = "medium"
     tune = None
-    crf = 23
 
     if tune is None:
         cmd = (
@@ -16,8 +15,8 @@ def frames_to_video(in_folder, out_file, frame_rate=24):
             # """-x264-params "keyint=15:no-deblock=1" """
             # """-pix_fmt yuv420p -sws_flags spline+accurate_rnd+full_chroma_int """
             """-pix_fmt yuv420p """
-            # """-vf "colormatrix=bt470bg:bt709,fps=fps={fr}" """
-            # """-color_range 1 -colorspace 1 -color_primaries 1 -color_trc 1 """
+            """-vf "colormatrix=bt470bg:bt709,fps=fps={fr}" """
+            """-color_range 1 -colorspace 1 -color_primaries 1 -color_trc 1 """
             """-force_key_frames expr:gte\\(t,n_forced*1\\) """
             """-crf {crf} {of}""")
     else:

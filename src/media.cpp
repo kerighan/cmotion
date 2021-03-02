@@ -1,5 +1,16 @@
 #include <cairo.h>
+#include <iostream>
+#include <cstring>
 #include "media.hpp"
+#include "cairo_jpg.hpp"
+
+
+const char* get_file_extension(const char* filename) {
+    int ext = '.';
+    const char* extension = NULL;
+    extension = strrchr(filename, ext);
+    return extension;
+}
 
 
 Image::Image(char* src, float x, float y, float width, float height, float opacity, bool responsive, bool hide_overflow, char* fit, char* align, int z_index){
@@ -14,8 +25,12 @@ Image::Image(char* src, float x, float y, float width, float height, float opaci
     this->responsive = responsive;
     this->hide_overflow = hide_overflow;
 
-    cairo_surface_t *image = cairo_image_surface_create_from_png(src);
-    this->image = image;
+    const char* ext = get_file_extension(src);
+    if (strcmp(ext, ".png") == 0){
+        this->image = cairo_image_surface_create_from_png(src);
+    } else if (strcmp(ext, ".jpg") == 0 || strcmp(ext, ".jpeg") == 0){
+        this->image = cairo_image_surface_create_from_jpeg(src);
+    }
 }
 
 

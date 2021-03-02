@@ -28,6 +28,9 @@ PYBIND11_MODULE(cmotion, m)  {
         .def("save", &Scene::save,
              py::arg("filename"),
              py::arg("t") = 0)
+        .def("to_svg", &Scene::to_svg,
+             py::arg("filename"),
+             py::arg("t") = 0)
         .def("render", &Scene::render,
              py::arg("filename"),
              py::arg("fps") = 25,
@@ -37,7 +40,7 @@ PYBIND11_MODULE(cmotion, m)  {
         .def(py::init<>())
         .def("add", &Element::add)
         .def("set_position", &Element::set_position)
-        .def("get_end", &Circle::get_end);
+        .def("get_end", &Element::get_end);
 
     // text submodule
     py::class_<Text, Element>(m_text, "Text")

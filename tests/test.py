@@ -48,6 +48,8 @@ for line_bbox in lines_bbox:
 
 fps = 60
 quality = 100
-scene.resize(500, 500)
+# scene.resize(500, 500)
+# scene.to_svg("test.svg", .1)
+
 scene.render("results", fps=fps, quality=quality, antialias=0)
 frames_to_video("results", "render.mp4", frame_rate=fps)

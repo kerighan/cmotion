@@ -7,6 +7,7 @@
 #include "cairo_jpg.hpp"
 #include "threading.hpp"
 #include "scene.hpp"
+#include <cairo-svg.h> 
 
 
 // ============================================================================
@@ -47,7 +48,7 @@ float Scene::get_end(){
 }
 
 
-void Scene::save(std::string filename, float t){
+void Scene::at(cairo_surface_t *surface, cairo_t *cr, float t){
     // sort layers
     std::sort(this->layers.begin(), this->layers.end(), z_sort);
 
@@ -55,13 +56,6 @@ void Scene::save(std::string filename, float t){
     float r = std::get<0>(this->color);
     float g = std::get<1>(this->color);
     float b = std::get<2>(this->color);
-
-    // create master surface to draw onto
-    cairo_surface_t *surface;
-    cairo_t *cr;
-    surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, this->width, this->height);
-    cr = cairo_create(surface);
-    cairo_set_antialias(cr, CAIRO_ANTIALIAS_BEST);
 
     // add background
     cairo_rectangle(cr, 0, 0, this->width, this->height);
@@ -72,9 +66,40 @@ void Scene::save(std::string filename, float t){
     for (size_t j = 0; j < this->layers.size(); j++){
         this->layers[j]->draw(cr, t);
     }
+}
+
+
+void Scene::save(std::string filename, float t){
+    // create surface and context
+    cairo_surface_t *surface;
+    cairo_t *cr;
+    surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, this->width, this->height);
+    cr = cairo_create(surface);
+    cairo_set_antialias(cr, CAIRO_ANTIALIAS_BEST);
+
+    // fill surface with content
+    this->at(surface, cr, t);
 
     // render frame
     cairo_image_surface_write_to_jpeg(surface, filename.c_str(), 100);
+
+    // free surface and context
+    cairo_destroy(cr);
+    cairo_surface_destroy(surface);
+}
+
+
+void Scene::to_svg(std::string filename, float t){
+    // create surface and context
+    cairo_surface_t *surface;
+    cairo_t *cr;
+    // surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, this->width, this->height);
+    surface = cairo_svg_surface_create(filename.c_str(), this->width, this->height);
+    cr = cairo_create(surface);
+    cairo_set_antialias(cr, CAIRO_ANTIALIAS_BEST);
+
+    // fill surface with content
+    this->at(surface, cr, t);
 
     // free surface and context
     cairo_destroy(cr);
@@ -134,15 +159,8 @@ void Scene::render(std::string filename, int fps, int quality, int antialias){
         cr = cairo_create(surface);
         cairo_set_antialias(cr, antialias_value);
 
-        // add background
-        cairo_rectangle(cr, 0, 0, this->width, this->height);
-        cairo_set_source_rgb(cr, r, g, b);
-        cairo_fill(cr);
-
-        // render frame
-        for (size_t j = 0; j < this->layers.size(); j++){
-            this->layers[j]->draw(cr, t);
-        }
+        // fill surface with content
+        this->at(surface, cr, t);
 
         // render frame
         std::string framename = get_filename(filename, i, ext);
