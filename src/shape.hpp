@@ -20,3 +20,15 @@ private:
     float height;
     Color color;
 };
+
+
+class Line: public Element {
+public:
+    Line(std::vector<float>& x, std::vector<float>& y, float stroke_width, std::string color, float opacity, bool responsive, char* align, int z_index);
+    void draw(cairo_t * cr, float t) override;
+private:
+    std::vector<float> x_pos;
+    std::vector<float> y_pos;
+    float stroke_width;
+    Color color;
+};

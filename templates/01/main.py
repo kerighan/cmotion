@@ -5,6 +5,7 @@ from cmotion.text import Text
 from cmotion import Scene
 from ffmpeg import frames_to_video
 import subprocess
+import numpy as np
 import time
 import os
 
@@ -37,7 +38,7 @@ tl_category.cubic_in("opacity", 1, 0)
 
 category = Text("TRAVEL",
                 font_family="../../fonts/Oswald-Bold.ttf",
-                color="#000000", z_index=2, size=3)
+                color="#000000", z_index=3, size=3)
 category.set_position(50, 10)
 category.animate_words(tl_category, WORD_TRANSITION)
 scene.add(category)
@@ -147,10 +148,15 @@ if not os.path.exists("render"):
 
 # scene.save("test.jpg", .2)
 
-start = time.time()
-scene.render("render", fps=FPS)
-print(time.time() - start)
-frames_to_video("render", "render.mp4", frame_rate=FPS, crf=30)
-print(time.time() - start)
-scene.to_svg("test.svg", 3)
+# start = time.time()
+# scene.render("render", fps=FPS)
+# print(time.time() - start)
+# frames_to_video("render", "render.mp4", frame_rate=FPS, crf=30)
+# print(time.time() - start)
+# scene.to_svg("test.svg", 3)
 
+fps = 15
+duration = scene.get_end()
+n_frames = int(round(duration * fps))
+for i, t in enumerate(np.linspace(0, duration, n_frames)):
+    scene.to_svg(f"render/{i}.svg", t)

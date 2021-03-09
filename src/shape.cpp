@@ -94,3 +94,61 @@ void Rectangle::draw(cairo_t* cr, float t){
     cairo_rectangle(cr, x, y, width, height);
     cairo_fill(cr);
 }
+
+// ============================================================================
+// Rectangle class
+// ============================================================================
+Line::Line(
+    std::vector<float>& x,
+    std::vector<float>& y,
+    float stroke_width,
+    const std::string color,
+    float opacity,
+    bool responsive,
+    char* align,
+    int z_index
+){
+    this->x_pos = x;
+    this->y_pos = y;
+    this->stroke_width = stroke_width;
+    this->color = hex_to_rgb(color);
+    this->opacity = opacity;
+    this->z_index = z_index;
+    this->align = parse_alignment(align);
+    this->responsive = responsive;
+}
+
+
+void Line::draw(cairo_t* cr, float t){
+    // compute default attributes
+    Attributes attributes;
+    attributes["stroke_width"] = this->stroke_width;
+    attributes["opacity"] = this->opacity;
+    this->at(attributes, t);
+
+    // get main attributes
+    float stroke_width = this->get_x(attributes["stroke_width"]);
+    float opacity = attributes["opacity"];
+
+    // return conditions
+    if (stroke_width <= 0 || opacity == 0)
+        return;
+
+    // number of points
+    size_t n_points = this->x_pos.size();
+    if (n_points <= 1)
+        return;
+
+    // draw lines
+    float r = std::get<0>(this->color);
+    float g = std::get<1>(this->color);
+    float b = std::get<2>(this->color);
+    cairo_set_source_rgba(cr, r, g, b, opacity);
+    cairo_set_line_width(cr, stroke_width);
+    
+    cairo_move_to(cr, this->get_x(x_pos[0]), this->get_y(y_pos[0]));
+    for (size_t i = 1; i < n_points; i++){
+        cairo_line_to(cr, this->get_x(x_pos[i]), this->get_y(y_pos[i]));
+    }
+    cairo_stroke(cr);
+}

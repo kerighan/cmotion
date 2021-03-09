@@ -84,6 +84,18 @@ PYBIND11_MODULE(cmotion, m)  {
              py::arg("responsive") = true,
              py::arg("align") = "center",
              py::arg("z_index") = 0);
+     
+    // std::vector<float>& x, std::vector<float>& y, float stroke_width, std::string color, float opacity, bool responsive, char* align, int z_index
+    py::class_<Line, Element>(m_shape, "Line")
+        .def(py::init<std::vector<float>&, std::vector<float>&, float, std::string, float, bool, char*, int>(),
+             py::arg("x"),
+             py::arg("y"),
+             py::arg("stroke_width") = .5,
+             py::arg("color") = "#FFFFFF",
+             py::arg("opacity") = 1,
+             py::arg("responsive") = true,
+             py::arg("align") = "center",
+             py::arg("z_index") = 0);
     
     // media submodule
     py::class_<Image, Element>(m_media, "Image")
