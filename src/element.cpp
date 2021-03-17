@@ -14,6 +14,32 @@ Element::Element(){
 }
 
 
+Element::Element(const Element& element){
+    this->screen_width = element.screen_width;
+    this->screen_height = element.screen_height;
+    this->x = element.x;
+    this->y = element.y;
+    this->opacity = element.opacity;
+    this->z_index = element.z_index;
+    this->align = element.align;
+    this->responsive = element.responsive;
+    this->timelines = element.timelines;
+}
+
+
+void Element::copy(const Element& element){
+    this->screen_width = element.screen_width;
+    this->screen_height = element.screen_height;
+    this->x = element.x;
+    this->y = element.y;
+    this->opacity = element.opacity;
+    this->z_index = element.z_index;
+    this->align = element.align;
+    this->responsive = element.responsive;
+    this->timelines = element.timelines;
+}
+
+
 void Element::add(Timeline& timeline){
     this->timelines.push_back(timeline);
 }

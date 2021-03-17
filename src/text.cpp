@@ -27,7 +27,6 @@ Text::Text(std::string& txt,float x, float y, float width, float size, float lin
     this->responsive = responsive;
     this->n_lines = 1;
     this->tokens = this->tokenize(this->txt);
-    show_lines(this->tokens);
 
     // create font
     FT_Face face;
@@ -46,6 +45,27 @@ Text::Text(std::string& txt,float x, float y, float width, float size, float lin
     }
     cairo_font_face_t * font = cairo_ft_font_face_create_for_ft_face(face, 0);
     this->font = font;
+}
+
+
+Text::Text(const Text& element){
+    this->copy(element);
+    this->width = element.width;
+    this->size = element.size;
+    this->line_height = element.line_height;
+    this->char_height = element.char_height;
+    this->space_size = element.space_size;
+    this->txt = element.txt;
+    this->tokens = element.tokens;
+    this->color = element.color;
+    this->font = element.font;
+    this->lines_model = element.lines_model;
+    this->word_timelines = element.word_timelines;
+    this->line_timelines = element.line_timelines;
+    this->word_delay = element.word_delay;
+    this->line_delay = element.line_delay;
+    this->n_words = element.n_words;
+    this->n_lines = element.n_lines;
 }
 
 

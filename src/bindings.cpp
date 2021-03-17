@@ -49,7 +49,7 @@ PYBIND11_MODULE(cmotion, m)  {
              py::arg("x") = 50,
              py::arg("y") = 50,
              py::arg("width") = 100,
-             py::arg("size") = 10,
+             py::arg("size") = 5,
              py::arg("line_height") = .5,
              py::arg("space_size") = .5,
              py::arg("font_family") = "OpenSans-Light.ttf",

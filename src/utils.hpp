@@ -2,6 +2,7 @@
 #define UTILS_H_
 #include "element.hpp"
 #include <iostream>
+#include <memory>
 #include <sstream>
 
 using Color = std::tuple<float, float, float>;

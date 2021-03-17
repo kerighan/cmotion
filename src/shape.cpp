@@ -6,6 +6,7 @@
 // ============================================================================
 // Circle class
 // ============================================================================
+
 Circle::Circle(float x, float y, float radius, const std::string color, float opacity, bool responsive, char* align, int z_index){
     this->x = x;
     this->y = y;
@@ -15,6 +16,13 @@ Circle::Circle(float x, float y, float radius, const std::string color, float op
     this->z_index = z_index;
     this->align = parse_alignment(align);
     this->responsive = responsive;
+}
+
+
+Circle::Circle(const Circle& element){
+    this->copy(element);
+    this->radius = element.radius;
+    this->color = element.color;
 }
 
 
@@ -49,6 +57,7 @@ void Circle::draw(cairo_t* cr, float t){
 // ============================================================================
 // Rectangle class
 // ============================================================================
+
 Rectangle::Rectangle(float x, float y, float width, float height, const std::string color, float opacity, bool responsive, char* align, int z_index){
     this->x = x;
     this->y = y;
@@ -59,6 +68,14 @@ Rectangle::Rectangle(float x, float y, float width, float height, const std::str
     this->z_index = z_index;
     this->align = parse_alignment(align);
     this->responsive = responsive;
+}
+
+
+Rectangle::Rectangle(const Rectangle& element){
+    this->copy(element);
+    this->width = element.width;
+    this->height = element.height;
+    this->color = element.color;
 }
 
 
@@ -98,6 +115,7 @@ void Rectangle::draw(cairo_t* cr, float t){
 // ============================================================================
 // Rectangle class
 // ============================================================================
+
 Line::Line(
     std::vector<float>& x,
     std::vector<float>& y,
@@ -116,6 +134,15 @@ Line::Line(
     this->z_index = z_index;
     this->align = parse_alignment(align);
     this->responsive = responsive;
+}
+
+
+Line::Line(const Line& element){
+    this->copy(element);
+    this->x_pos = element.x_pos;
+    this->y_pos = element.y_pos;
+    this->stroke_width = element.stroke_width;
+    this->color = element.color;
 }
 
 

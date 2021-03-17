@@ -21,9 +21,10 @@ Scene::Scene(int width, int height, const std::string color){
 
 
 void Scene::add(Element* element){
-    element->set_screen(this->width, this->height);
-    element->on_resize();
-    this->layers.push_back(element);
+    Element* elem = element->clone();
+    elem->set_screen(this->width, this->height);
+    elem->on_resize();
+    this->layers.push_back(elem);
 }
 
 
@@ -48,7 +49,7 @@ float Scene::get_end(){
 }
 
 
-void Scene::at(cairo_surface_t *surface, cairo_t *cr, float t){
+void Scene::at(cairo_t *cr, float t){
     // sort layers
     std::sort(this->layers.begin(), this->layers.end(), z_sort);
 
@@ -78,7 +79,7 @@ void Scene::save(std::string filename, float t){
     cairo_set_antialias(cr, CAIRO_ANTIALIAS_BEST);
 
     // fill surface with content
-    this->at(surface, cr, t);
+    this->at(cr, t);
 
     // render frame
     cairo_image_surface_write_to_jpeg(surface, filename.c_str(), 100);
@@ -99,7 +100,7 @@ void Scene::to_svg(std::string filename, float t){
     cairo_set_antialias(cr, CAIRO_ANTIALIAS_BEST);
 
     // fill surface with content
-    this->at(surface, cr, t);
+    this->at(cr, t);
 
     // free surface and context
     cairo_destroy(cr);
@@ -142,11 +143,6 @@ void Scene::render(std::string filename, int fps, int quality, int antialias){
     int n_frames = fps * this->get_end();
     std::cout << n_frames << " frames" << std::endl;
 
-    // get background color
-    float r = std::get<0>(this->color);
-    float g = std::get<1>(this->color);
-    float b = std::get<2>(this->color);
-
     // parallel rendering
     PARALLEL_FOR_BEGIN(n_frames){
         // get time from frame
@@ -160,7 +156,7 @@ void Scene::render(std::string filename, int fps, int quality, int antialias){
         cairo_set_antialias(cr, antialias_value);
 
         // fill surface with content
-        this->at(surface, cr, t);
+        this->at(cr, t);
 
         // render frame
         std::string framename = get_filename(filename, i, ext);

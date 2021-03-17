@@ -2,12 +2,14 @@
 #define ELEMENT_H_
 #include <vector>
 #include <cairo.h>
+#include <iostream>
 #include "timeline.hpp"
 
 
 // ============================================================================
 // layout enumerations
 // ============================================================================
+
 namespace layout
 {
     enum position {
@@ -36,22 +38,28 @@ void adapt_to_alignment(layout::position& align, float* x, float* y, float* widt
 // ============================================================================
 // Base Element class
 // ============================================================================
+
 class Element
 {
 public:
     Element();
+    Element(const Element& elem);
+    virtual Element* clone(){ return new Element(*this); };
+    void copy(const Element& element);
+
     void add(Timeline& timeline);
     void set_screen(int w, int h);
     void set_position(float x, float y);
     float get_x(float x);
     float get_y(float y);
     void at(Attributes& attributes, float t);
-    int z_index;
 
     virtual float get_end();
     virtual void draw(cairo_t*, float){};
     virtual void on_resize();
     virtual void get_attributes(Attributes& attributes, float t);
+
+    int z_index;
 
 protected:
     std::vector<Timeline> timelines;
