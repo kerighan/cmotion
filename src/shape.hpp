@@ -30,7 +30,7 @@ private:
 
 class Line: public Element {
 public:
-    Line(std::vector<float>& x, std::vector<float>& y, float stroke_width, std::string color, float opacity, bool responsive, char* align, int z_index);
+    Line(std::vector<float>& x, std::vector<float>& y, float stroke_width, int cap, std::string color, float opacity, bool responsive, char* align, int z_index);
     Line(const Line& line);
     Line* clone() override{ return new Line(*this); }
 
@@ -40,4 +40,5 @@ private:
     std::vector<float> y_pos;
     float stroke_width;
     Color color;
+    cairo_line_cap_t cap;
 };

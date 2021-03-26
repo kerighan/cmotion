@@ -35,7 +35,8 @@ PYBIND11_MODULE(cmotion, m)  {
              py::arg("filename"),
              py::arg("fps") = 25,
              py::arg("quality") = 90,
-             py::arg("antialias") = 5);
+             py::arg("antialias") = 5)
+        .def("get_number_of_layers", &Scene::get_number_of_layers);
     py::class_<Element>(m, "Element")
         .def(py::init<>())
         .def("add", &Element::add)
@@ -84,13 +85,12 @@ PYBIND11_MODULE(cmotion, m)  {
              py::arg("responsive") = true,
              py::arg("align") = "center",
              py::arg("z_index") = 0);
-     
-    // std::vector<float>& x, std::vector<float>& y, float stroke_width, std::string color, float opacity, bool responsive, char* align, int z_index
     py::class_<Line, Element>(m_shape, "Line")
-        .def(py::init<std::vector<float>&, std::vector<float>&, float, std::string, float, bool, char*, int>(),
+        .def(py::init<std::vector<float>&, std::vector<float>&, float, int, std::string, float, bool, char*, int>(),
              py::arg("x"),
              py::arg("y"),
              py::arg("stroke_width") = .5,
+             py::arg("cap") = 0,
              py::arg("color") = "#FFFFFF",
              py::arg("opacity") = 1,
              py::arg("responsive") = true,

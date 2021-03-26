@@ -168,3 +168,8 @@ void Scene::render(std::string filename, int fps, int quality, int antialias){
         cairo_surface_destroy(surface);
     }PARALLEL_FOR_END();
 }
+
+
+size_t Scene::get_number_of_layers(){
+    return this->layers.size();
+}

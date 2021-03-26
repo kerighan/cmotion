@@ -5,6 +5,9 @@
 class Image: public Element {
 public:
     Image(char* src,float x, float y, float width, float height, float opacity, bool responsive, bool hide_overflow, char* fit, char* align, int z_index);
+    Image(const Image& element);
+    Image* clone() override{ return new Image(*this); }
+
     void draw(cairo_t * cr, float t) override;
 private:
     float width;

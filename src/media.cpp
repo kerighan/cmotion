@@ -34,6 +34,16 @@ Image::Image(char* src, float x, float y, float width, float height, float opaci
 }
 
 
+Image::Image(const Image& element){
+    this->copy(element);
+    this->width = element.width;
+    this->height = element.height;
+    this->fit = element.fit;
+    this->hide_overflow = element.hide_overflow;
+    this->image = element.image;
+}
+
+
 void Image::draw(cairo_t* cr, float t){
     // compute default attributes
     Attributes attributes;
@@ -86,7 +96,6 @@ void Image::draw(cairo_t* cr, float t){
     // scale back
     cairo_scale(cr, 1./ratio, 1./ratio);
     cairo_translate(cr, -x, -y);
-
 
     // clip if overflow is hidden
     if (this->hide_overflow){

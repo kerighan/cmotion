@@ -15,6 +15,7 @@ public:
     void to_svg(std::string filename, float t);
     void resize(int width, int height);
     float get_end();
+    size_t get_number_of_layers();
 
 private:
     std::vector<Element*> layers;

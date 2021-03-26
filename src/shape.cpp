@@ -120,6 +120,7 @@ Line::Line(
     std::vector<float>& x,
     std::vector<float>& y,
     float stroke_width,
+    int cap,
     const std::string color,
     float opacity,
     bool responsive,
@@ -134,6 +135,18 @@ Line::Line(
     this->z_index = z_index;
     this->align = parse_alignment(align);
     this->responsive = responsive;
+
+    switch (cap){
+        case 1:
+            this->cap = CAIRO_LINE_CAP_ROUND;
+            break;
+        case 2:
+            this->cap = CAIRO_LINE_CAP_SQUARE;
+            break;
+        default:
+            this->cap = CAIRO_LINE_CAP_BUTT;
+            break;
+    }
 }
 
 
@@ -143,6 +156,7 @@ Line::Line(const Line& element){
     this->y_pos = element.y_pos;
     this->stroke_width = element.stroke_width;
     this->color = element.color;
+    this->cap = element.cap;
 }
 
 
@@ -171,6 +185,8 @@ void Line::draw(cairo_t* cr, float t){
     float g = std::get<1>(this->color);
     float b = std::get<2>(this->color);
     cairo_set_source_rgba(cr, r, g, b, opacity);
+    cairo_set_line_cap(cr, this->cap);
+    cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
     cairo_set_line_width(cr, stroke_width);
     
     cairo_move_to(cr, this->get_x(x_pos[0]), this->get_y(y_pos[0]));
