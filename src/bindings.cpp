@@ -41,6 +41,8 @@ PYBIND11_MODULE(cmotion, m)  {
         .def(py::init<>())
         .def("add", &Element::add)
         .def("set_position", &Element::set_position)
+        .def("set_screen", &Element::set_screen)
+        .def("on_resize", &Element::on_resize)
         .def("get_end", &Element::get_end);
 
     // text submodule

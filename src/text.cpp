@@ -390,6 +390,7 @@ void Text::line_at(Attributes& attributes, float t){
 LinesBBox Text::get_lines_bbox(){
     LinesBBox lines_bbox;
     for (auto& line : this->lines_model){
+
         std::unordered_map<std::string, float> line_bbox;
         float line_x = line[0].x;
         float line_y = line[0].y - this->char_height;
@@ -401,6 +402,7 @@ LinesBBox Text::get_lines_bbox(){
         line_bbox["width"] = 100 * line_width / this->screen_width;
         line_bbox["height"] = 100 * this->char_height / this->screen_height;
         lines_bbox.push_back(line_bbox);
+
     }
     return lines_bbox;
 }

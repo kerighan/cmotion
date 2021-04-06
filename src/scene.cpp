@@ -23,7 +23,6 @@ Scene::Scene(int width, int height, const std::string color){
 void Scene::add(Element* element){
     Element* elem = element->clone();
     elem->set_screen(this->width, this->height);
-    elem->on_resize();
     this->layers.push_back(elem);
 }
 
@@ -33,7 +32,6 @@ void Scene::resize(int width, int height){
     this->height = height;
     for (auto& layer : this->layers){
         layer->set_screen(width, height);
-        layer->on_resize();
     }
 }
 

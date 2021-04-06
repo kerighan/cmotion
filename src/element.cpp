@@ -58,6 +58,7 @@ void Element::at(Attributes& attributes, float t){
 void Element::set_screen(int w, int h){
     this->screen_height = h;
     this->screen_width = w;
+    this->on_resize();
 }
 
 
