@@ -123,6 +123,7 @@ Line::Line(
     int cap,
     const std::string color,
     float opacity,
+    double dotted,
     bool responsive,
     char* align,
     int z_index
@@ -135,6 +136,7 @@ Line::Line(
     this->z_index = z_index;
     this->align = parse_alignment(align);
     this->responsive = responsive;
+    this->dotted = dotted;
 
     switch (cap){
         case 1:
@@ -157,6 +159,7 @@ Line::Line(const Line& element){
     this->stroke_width = element.stroke_width;
     this->color = element.color;
     this->cap = element.cap;
+    this->dotted = element.dotted;
 }
 
 
@@ -188,6 +191,12 @@ void Line::draw(cairo_t* cr, float t){
     cairo_set_line_cap(cr, this->cap);
     cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
     cairo_set_line_width(cr, stroke_width);
+
+    // dotted pattern
+    if (this->dotted > 0){
+        double dash[1] = {this->dotted * stroke_width};
+        cairo_set_dash(cr, dash, 1, 0);
+    }
     
     cairo_move_to(cr, this->get_x(x_pos[0]), this->get_y(y_pos[0]));
     for (size_t i = 1; i < n_points; i++){

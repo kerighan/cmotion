@@ -87,14 +87,16 @@ PYBIND11_MODULE(cmotion, m)  {
              py::arg("responsive") = true,
              py::arg("align") = "center",
              py::arg("z_index") = 0);
+     
     py::class_<Line, Element>(m_shape, "Line")
-        .def(py::init<std::vector<float>&, std::vector<float>&, float, int, std::string, float, bool, char*, int>(),
+        .def(py::init<std::vector<float>&, std::vector<float>&, float, int, std::string, float, double, bool, char*, int>(),
              py::arg("x"),
              py::arg("y"),
              py::arg("stroke_width") = .5,
              py::arg("cap") = 0,
              py::arg("color") = "#FFFFFF",
              py::arg("opacity") = 1,
+             py::arg("dotted") = 0,
              py::arg("responsive") = true,
              py::arg("align") = "center",
              py::arg("z_index") = 0);

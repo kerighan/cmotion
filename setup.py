@@ -13,7 +13,7 @@ def pkgconfig(pkg, kw):
 
 
 extension_kwargs = pkgconfig(
-    'cairo libjpeg', dict(
+    'cairo libjpeg freetype2', dict(
         language='c++',
         include_dirs=[
             pybind11.get_include(),
