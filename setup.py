@@ -8,7 +8,7 @@ def pkgconfig(pkg, kw):
     flag_map = {'-I': 'include_dirs', '-L': 'library_dirs', '-l': 'libraries'}
     output = subprocess.getoutput('pkg-config --cflags --libs {}'.format(pkg))
     for token in output.strip().split():
-        kw.setdefault(flag_map.get(token[:2]), []).append(token[2:])
+        kw.setdefault(str(flag_map.get(token[:2])), []).append(token[2:])
     return kw
 
 
