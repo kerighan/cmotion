@@ -1,14 +1,16 @@
-from setuptools import setup, find_packages, Extension
-from glob import glob
 import subprocess
+from glob import glob
+
 import pybind11
+from setuptools import Extension, find_packages, setup
 
 
 def pkgconfig(pkg, kw):
     flag_map = {'-I': 'include_dirs', '-L': 'library_dirs', '-l': 'libraries'}
     output = subprocess.getoutput('pkg-config --cflags --libs {}'.format(pkg))
+    assert "not found" not in output
     for token in output.strip().split():
-        kw.setdefault(str(flag_map.get(token[:2])), []).append(token[2:])
+        kw.setdefault(flag_map.get(token[:2]), []).append(token[2:])
     return kw
 
 
