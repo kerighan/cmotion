@@ -7,38 +7,40 @@
 #include "cairo_jpg.hpp"
 #include "threading.hpp"
 #include "scene.hpp"
-#include <cairo-svg.h> 
-
+#include <cairo-svg.h>
 
 // ============================================================================
 // Scene
 // ============================================================================
-Scene::Scene(int width, int height, const std::string color){
+Scene::Scene(int width, int height, const std::string color)
+{
     this->width = width;
     this->height = height;
     this->color = hex_to_rgb(color);
 }
 
-
-void Scene::add(Element* element){
-    Element* elem = element->clone();
+void Scene::add(Element *element)
+{
+    Element *elem = element->clone();
     elem->set_screen(this->width, this->height);
     this->layers.push_back(elem);
 }
 
-
-void Scene::resize(int width, int height){
+void Scene::resize(int width, int height)
+{
     this->width = width;
     this->height = height;
-    for (auto& layer : this->layers){
+    for (auto &layer : this->layers)
+    {
         layer->set_screen(width, height);
     }
 }
 
-
-float Scene::get_end(){
+float Scene::get_end()
+{
     float max = 0;
-    for (auto& layer : this->layers){
+    for (auto &layer : this->layers)
+    {
         float tmp = layer->get_end();
         if (tmp > max)
             max = tmp;
@@ -46,8 +48,8 @@ float Scene::get_end(){
     return max;
 }
 
-
-void Scene::at(cairo_t *cr, float t){
+void Scene::at(cairo_t *cr, float t)
+{
     // sort layers
     std::sort(this->layers.begin(), this->layers.end(), z_sort);
 
@@ -62,13 +64,14 @@ void Scene::at(cairo_t *cr, float t){
     cairo_fill(cr);
 
     // render frame
-    for (size_t j = 0; j < this->layers.size(); j++){
+    for (size_t j = 0; j < this->layers.size(); j++)
+    {
         this->layers[j]->draw(cr, t);
     }
 }
 
-
-void Scene::save(std::string filename, float t){
+void Scene::save(std::string filename, float t)
+{
     // create surface and context
     cairo_surface_t *surface;
     cairo_t *cr;
@@ -87,8 +90,8 @@ void Scene::save(std::string filename, float t){
     cairo_surface_destroy(surface);
 }
 
-
-void Scene::to_svg(std::string filename, float t){
+void Scene::to_svg(std::string filename, float t)
+{
     // create surface and context
     cairo_surface_t *surface;
     cairo_t *cr;
@@ -105,33 +108,34 @@ void Scene::to_svg(std::string filename, float t){
     cairo_surface_destroy(surface);
 }
 
-
-void Scene::render(std::string filename, int fps, int quality, int antialias){
+void Scene::render(std::string filename, int fps, int quality, int antialias)
+{
     // extension
     const std::string ext = std::string(".jpg");
     filename += "/";
 
     // choose the right antialias
     _cairo_antialias antialias_value;
-    switch (antialias){
-        case 0:
-            antialias_value = CAIRO_ANTIALIAS_NONE;
-            break;
-        case 1:
-            antialias_value = CAIRO_ANTIALIAS_GRAY;
-            break;
-        case 2:
-            antialias_value = CAIRO_ANTIALIAS_FAST;
-            break;
-        case 3:
-            antialias_value = CAIRO_ANTIALIAS_GOOD;
-            break;
-        case 4:
-            antialias_value = CAIRO_ANTIALIAS_SUBPIXEL;
-            break;
-        default:
-            antialias_value = CAIRO_ANTIALIAS_BEST;
-            break;
+    switch (antialias)
+    {
+    case 0:
+        antialias_value = CAIRO_ANTIALIAS_NONE;
+        break;
+    case 1:
+        antialias_value = CAIRO_ANTIALIAS_GRAY;
+        break;
+    case 2:
+        antialias_value = CAIRO_ANTIALIAS_FAST;
+        break;
+    case 3:
+        antialias_value = CAIRO_ANTIALIAS_GOOD;
+        break;
+    case 4:
+        antialias_value = CAIRO_ANTIALIAS_SUBPIXEL;
+        break;
+    default:
+        antialias_value = CAIRO_ANTIALIAS_BEST;
+        break;
     }
 
     // sort layers
@@ -142,7 +146,8 @@ void Scene::render(std::string filename, int fps, int quality, int antialias){
     std::cout << n_frames << " frames" << std::endl;
 
     // parallel rendering
-    PARALLEL_FOR_BEGIN(n_frames){
+    PARALLEL_FOR_BEGIN(n_frames)
+    {
         // get time from frame
         float t = (float)i / fps;
 
@@ -158,16 +163,17 @@ void Scene::render(std::string filename, int fps, int quality, int antialias){
 
         // render frame
         std::string framename = get_filename(filename, i, ext);
-        char* framename_char = const_cast<char*>(framename.c_str());
+        char *framename_char = const_cast<char *>(framename.c_str());
         cairo_image_surface_write_to_jpeg(surface, framename_char, quality);
 
         // free surface and context
         cairo_destroy(cr);
         cairo_surface_destroy(surface);
-    }PARALLEL_FOR_END();
+    }
+    PARALLEL_FOR_END();
 }
 
-
-size_t Scene::get_number_of_layers(){
+size_t Scene::get_number_of_layers()
+{
     return this->layers.size();
 }

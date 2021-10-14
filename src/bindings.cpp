@@ -7,11 +7,10 @@
 #include "text.hpp"
 #include "timeline.hpp"
 
-
 namespace py = pybind11;
 
-
-PYBIND11_MODULE(cmotion, m)  {
+PYBIND11_MODULE(cmotion, m)
+{
     py::module_ m_text = m.def_submodule("text", "Text submodule");
     py::module_ m_shape = m.def_submodule("shape", "Shape submodule");
     py::module_ m_media = m.def_submodule("media", "Media submodule");
@@ -46,8 +45,11 @@ PYBIND11_MODULE(cmotion, m)  {
         .def("get_end", &Element::get_end);
 
     // text submodule
+    py::class_<Font>(m_text, "Font")
+        .def(py::init<char *>(), py::arg("font_family"));
+
     py::class_<Text, Element>(m_text, "Text")
-        .def(py::init<std::string&, float, float, float, float, float, float, char*, std::string, float, bool, char*, int>(),
+        .def(py::init<std::string &, float, float, float, float, float, float, char *, std::string, float, bool, char *, int, Font *>(),
              py::arg("txt"),
              py::arg("x") = 50,
              py::arg("y") = 50,
@@ -60,14 +62,15 @@ PYBIND11_MODULE(cmotion, m)  {
              py::arg("opacity") = 1,
              py::arg("responsive") = true,
              py::arg("align") = "center",
-             py::arg("z_index") = 0)
+             py::arg("z_index") = 0,
+             py::arg("font") = nullptr)
         .def("animate_words", &Text::animate_words)
         .def("animate_lines", &Text::animate_lines)
         .def("get_lines_bbox", &Text::get_lines_bbox);
 
     // shape submodule
     py::class_<Circle, Element>(m_shape, "Circle")
-        .def(py::init<float, float, float, std::string, float, bool, char*, int>(),
+        .def(py::init<float, float, float, std::string, float, bool, char *, int>(),
              py::arg("x") = 50,
              py::arg("y") = 50,
              py::arg("radius") = 1,
@@ -77,7 +80,7 @@ PYBIND11_MODULE(cmotion, m)  {
              py::arg("align") = "center",
              py::arg("z_index") = 0);
     py::class_<Rectangle, Element>(m_shape, "Rectangle")
-        .def(py::init<float, float, float, float, std::string, float, bool, char*, int>(),
+        .def(py::init<float, float, float, float, std::string, float, bool, char *, int>(),
              py::arg("x") = 50,
              py::arg("y") = 50,
              py::arg("width") = 50,
@@ -87,9 +90,9 @@ PYBIND11_MODULE(cmotion, m)  {
              py::arg("responsive") = true,
              py::arg("align") = "center",
              py::arg("z_index") = 0);
-     
+
     py::class_<Line, Element>(m_shape, "Line")
-        .def(py::init<std::vector<float>&, std::vector<float>&, float, int, std::string, float, double, bool, char*, int>(),
+        .def(py::init<std::vector<float> &, std::vector<float> &, float, int, std::string, float, double, bool, char *, int>(),
              py::arg("x"),
              py::arg("y"),
              py::arg("stroke_width") = .5,
@@ -100,10 +103,10 @@ PYBIND11_MODULE(cmotion, m)  {
              py::arg("responsive") = true,
              py::arg("align") = "center",
              py::arg("z_index") = 0);
-    
+
     // media submodule
     py::class_<Image, Element>(m_media, "Image")
-        .def(py::init<char*, float, float, float, float, float, bool, bool, char*, char*, int>(),
+        .def(py::init<char *, float, float, float, float, float, bool, bool, char *, char *, int>(),
              py::arg("src"),
              py::arg("x") = 50,
              py::arg("y") = 50,

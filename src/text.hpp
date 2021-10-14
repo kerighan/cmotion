@@ -2,11 +2,11 @@
 #include "element.hpp"
 #include "utils.hpp"
 
-
 // ============================================================================
 // Models
 // ============================================================================
-struct TokenModel {
+struct TokenModel
+{
     float x;
     float y;
     float width;
@@ -25,23 +25,34 @@ using LinesBBox = std::vector<std::unordered_map<std::string, float>>;
 // ============================================================================
 // Elements
 // ============================================================================
-class Text: public Element {
+class Font
+{
 public:
-    Text(std::string& txt,float x, float y, float width, float size, float line_height, float space_size, char* filename, std::string color, float opacity, bool responsive, char* align, int z_index);
-    Text(const Text& element);
-    Text* clone() override{ return new Text(*this); }
+    Font(char *filename);
+    cairo_font_face_t *font;
+    // ~Font();
+};
+
+class Text : public Element
+{
+public:
+    Text(std::string &txt, float x, float y, float width, float size, float line_height, float space_size, char *filename, std::string color, float opacity, bool responsive, char *align, int z_index, Font *font_obj);
+    Text(const Text &element);
+    Text *clone() override { return new Text(*this); }
+    // ~Text();
 
     float get_end() override;
     void on_resize() override;
-    void get_attributes(Attributes& attributes, float t) override;
-    void draw(cairo_t * cr, float t) override;
+    void get_attributes(Attributes &attributes, float t) override;
+    void draw(cairo_t *cr, float t) override;
 
     Lines tokenize(std::string txt);
-    void animate_words(Timeline& timeline, float delay);
-    void animate_lines(Timeline& timeline, float delay);
-    void word_at(Attributes& attributes, float t);
-    void line_at(Attributes& attributes, float t);
+    void animate_words(Timeline &timeline, float delay);
+    void animate_lines(Timeline &timeline, float delay);
+    void word_at(Attributes &attributes, float t);
+    void line_at(Attributes &attributes, float t);
     LinesBBox get_lines_bbox();
+
 private:
     float width;
     float size;
@@ -51,7 +62,7 @@ private:
     std::string txt;
     Lines tokens;
     Color color;
-    cairo_font_face_t * font;
+    cairo_font_face_t *font;
     LinesModel lines_model;
 
     std::vector<Timeline> word_timelines;
@@ -63,16 +74,14 @@ private:
     size_t n_lines;
 };
 
-
-LinesModel get_text_model(cairo_t* cr, layout::position align, float x, float y, Lines& lines, float width, float line_height, float space_size);
+LinesModel get_text_model(cairo_t *cr, layout::position align, float x, float y, Lines &lines, float width, float line_height, float space_size);
 void adapt_text_to_alignment(
-    LinesModel& new_lines,
-    layout::position& align,
+    LinesModel &new_lines,
+    layout::position &align,
     std::vector<float> lines_width,
     float x,
     float y,
     float char_height,
     float line_height,
-    size_t n_lines
-);
+    size_t n_lines);
 void show_lines(Lines lines);
