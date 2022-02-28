@@ -72,6 +72,7 @@ void Scene::at(cairo_t *cr, float t)
 
 void Scene::save(std::string filename, float t)
 {
+
     // create surface and context
     cairo_surface_t *surface;
     cairo_t *cr;
@@ -83,7 +84,13 @@ void Scene::save(std::string filename, float t)
     this->at(cr, t);
 
     // render frame
-    cairo_image_surface_write_to_jpeg(surface, filename.c_str(), 100);
+    // if (extension == "")
+    std::string ext = filename.substr(filename.find_last_of(".") + 1);
+
+    if (ext == "jpg" || ext == "jpeg")
+        cairo_image_surface_write_to_jpeg(surface, filename.c_str(), 100);
+    else if (ext == "png")
+        cairo_surface_write_to_png(surface, filename.c_str());
 
     // free surface and context
     cairo_destroy(cr);
