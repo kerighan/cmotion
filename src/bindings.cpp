@@ -104,6 +104,20 @@ PYBIND11_MODULE(cmotion, m)
              py::arg("align") = "center",
              py::arg("z_index") = 0);
 
+    py::class_<Curve, Element>(m_shape, "Curve")
+        .def(py::init<std::vector<float> &, std::vector<float> &, float, int, std::string, float, double, bool, char *, int, float>(),
+             py::arg("x"),
+             py::arg("y"),
+             py::arg("stroke_width") = .5,
+             py::arg("cap") = 0,
+             py::arg("color") = "#FFFFFF",
+             py::arg("opacity") = 1,
+             py::arg("dotted") = 0,
+             py::arg("responsive") = true,
+             py::arg("align") = "center",
+             py::arg("z_index") = 0,
+             py::arg("curvature") = 0.5);
+
     // media submodule
     py::class_<Image, Element>(m_media, "Image")
         .def(py::init<char *, float, float, float, float, float, bool, bool, char *, char *, int>(),
