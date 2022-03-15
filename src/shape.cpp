@@ -7,7 +7,7 @@
 // Circle class
 // ============================================================================
 
-Circle::Circle(float x, float y, float radius, const std::string color, float opacity, bool responsive, char *align, int z_index)
+Circle::Circle(float x, float y, float radius, const std::string color, float opacity, bool responsive, char *align, int z_index, float stroke)
 {
     this->x = x;
     this->y = y;
@@ -17,6 +17,7 @@ Circle::Circle(float x, float y, float radius, const std::string color, float op
     this->z_index = z_index;
     this->align = parse_alignment(align);
     this->responsive = responsive;
+    this->stroke = stroke;
 }
 
 Circle::Circle(const Circle &element)
@@ -24,6 +25,7 @@ Circle::Circle(const Circle &element)
     this->copy(element);
     this->radius = element.radius;
     this->color = element.color;
+    this->stroke = element.stroke;
 }
 
 void Circle::draw(cairo_t *cr, float t)
@@ -52,7 +54,16 @@ void Circle::draw(cairo_t *cr, float t)
     float b = std::get<2>(this->color);
     cairo_set_source_rgba(cr, r, g, b, opacity);
     cairo_arc(cr, x, y, radius, 0, 2 * M_PI);
-    cairo_fill(cr);
+    if (stroke == 0)
+    {
+        cairo_fill(cr);
+    }
+    else
+    {
+        float stroke_width = this->get_x(stroke);
+        cairo_set_line_width(cr, stroke_width);
+        cairo_stroke(cr);
+    }
 }
 
 // ============================================================================

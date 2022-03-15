@@ -454,7 +454,6 @@ LinesBBox Text::get_lines_bbox()
     LinesBBox lines_bbox;
     for (auto &line : this->lines_model)
     {
-
         std::unordered_map<std::string, float> line_bbox;
         float line_x = line[0].x;
         float line_y = line[0].y - this->char_height;
