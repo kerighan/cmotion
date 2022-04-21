@@ -219,6 +219,12 @@ void Line::draw(cairo_t *cr, float t)
         cairo_line_to(cr, this->get_x(x_pos[i]), this->get_y(y_pos[i]));
     }
     cairo_stroke(cr);
+
+    // clear pattern
+    if (this->dotted > 0)
+    {
+        cairo_set_dash(cr, {}, 0, 0);
+    }
 }
 
 // ============================================================================

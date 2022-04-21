@@ -121,7 +121,7 @@ PYBIND11_MODULE(cmotion, m)
 
     // media submodule
     py::class_<Image, Element>(m_media, "Image")
-        .def(py::init<char *, float, float, float, float, float, bool, bool, char *, char *, int>(),
+        .def(py::init<char *, float, float, float, float, float, bool, bool, bool, char *, char *, int>(),
              py::arg("src"),
              py::arg("x") = 50,
              py::arg("y") = 50,
@@ -130,6 +130,7 @@ PYBIND11_MODULE(cmotion, m)
              py::arg("opacity") = 1,
              py::arg("responsive") = true,
              py::arg("hide_overflow") = true,
+             py::arg("circle_mask") = false,
              py::arg("fit") = "contain",
              py::arg("align") = "center",
              py::arg("z_index") = 0);

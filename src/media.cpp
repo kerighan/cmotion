@@ -3,17 +3,18 @@
 #include <cstring>
 #include "media.hpp"
 #include "cairo_jpg.hpp"
+#include <math.h>
 
-
-const char* get_file_extension(const char* filename) {
+const char *get_file_extension(const char *filename)
+{
     int ext = '.';
-    const char* extension = NULL;
+    const char *extension = NULL;
     extension = strrchr(filename, ext);
     return extension;
 }
 
-
-Image::Image(char* src, float x, float y, float width, float height, float opacity, bool responsive, bool hide_overflow, char* fit, char* align, int z_index){
+Image::Image(char *src, float x, float y, float width, float height, float opacity, bool responsive, bool hide_overflow, bool circle_mask, char *fit, char *align, int z_index)
+{
     this->x = x;
     this->y = y;
     this->width = width;
@@ -24,27 +25,32 @@ Image::Image(char* src, float x, float y, float width, float height, float opaci
     this->fit = parse_fit(fit);
     this->responsive = responsive;
     this->hide_overflow = hide_overflow;
+    this->circle_mask = circle_mask;
 
-    const char* ext = get_file_extension(src);
-    if (strcmp(ext, ".png") == 0){
+    const char *ext = get_file_extension(src);
+    if (strcmp(ext, ".png") == 0)
+    {
         this->image = cairo_image_surface_create_from_png(src);
-    } else if (strcmp(ext, ".jpg") == 0 || strcmp(ext, ".jpeg") == 0){
+    }
+    else if (strcmp(ext, ".jpg") == 0 || strcmp(ext, ".jpeg") == 0)
+    {
         this->image = cairo_image_surface_create_from_jpeg(src);
     }
 }
 
-
-Image::Image(const Image& element){
+Image::Image(const Image &element)
+{
     this->copy(element);
     this->width = element.width;
     this->height = element.height;
     this->fit = element.fit;
     this->hide_overflow = element.hide_overflow;
+    this->circle_mask = element.circle_mask;
     this->image = element.image;
 }
 
-
-void Image::draw(cairo_t* cr, float t){
+void Image::draw(cairo_t *cr, float t)
+{
     // compute default attributes
     Attributes attributes;
     attributes["scale"] = 1.;
@@ -75,13 +81,14 @@ void Image::draw(cairo_t* cr, float t){
     float w_ratio = width / w;
     float h_ratio = height / h;
     float ratio = scale;
-    switch (this->fit){
-        case layout::fit::cover:
-            ratio *= std::max(w_ratio, h_ratio);
-            break;
-        case layout::fit::contain:
-            ratio *= std::min(w_ratio, h_ratio);
-            break;
+    switch (this->fit)
+    {
+    case layout::fit::cover:
+        ratio *= std::max(w_ratio, h_ratio);
+        break;
+    case layout::fit::contain:
+        ratio *= std::min(w_ratio, h_ratio);
+        break;
     }
     w *= ratio;
     h *= ratio;
@@ -94,20 +101,32 @@ void Image::draw(cairo_t* cr, float t){
     cairo_set_source_surface(cr, this->image, 0, 0);
 
     // scale back
-    cairo_scale(cr, 1./ratio, 1./ratio);
+    cairo_scale(cr, 1. / ratio, 1. / ratio);
     cairo_translate(cr, -x, -y);
 
     // clip if overflow is hidden
-    if (this->hide_overflow){
+    if (this->hide_overflow)
+    {
         adapt_to_alignment(this->align, &x_copy, &y_copy, &width, &height);
         cairo_rectangle(cr, x_copy, y_copy, width, height);
         cairo_clip(cr);
     }
 
+    if (this->circle_mask)
+    {
+        cairo_arc(
+            cr, x_copy + width / 2, y_copy + height / 2, width / 2, 0,
+            2 * M_PI);
+        cairo_clip(cr);
+    }
+
     // paint with opacity if needed
-    if (opacity < 1){
+    if (opacity < 1)
+    {
         cairo_paint_with_alpha(cr, opacity);
-    } else {
+    }
+    else
+    {
         cairo_paint(cr);
     }
     cairo_reset_clip(cr);
