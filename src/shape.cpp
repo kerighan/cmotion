@@ -7,7 +7,7 @@
 // Circle class
 // ============================================================================
 
-Circle::Circle(float x, float y, float radius, const std::string color, float opacity, bool responsive, char *align, int z_index, float stroke)
+Circle::Circle(float x, float y, float radius, const std::string color, float opacity, bool responsive, char *align, int z_index, float stroke_width)
 {
     this->x = x;
     this->y = y;
@@ -17,7 +17,7 @@ Circle::Circle(float x, float y, float radius, const std::string color, float op
     this->z_index = z_index;
     this->align = parse_alignment(align);
     this->responsive = responsive;
-    this->stroke = stroke;
+    this->stroke_width = stroke_width;
 }
 
 Circle::Circle(const Circle &element)
@@ -25,7 +25,7 @@ Circle::Circle(const Circle &element)
     this->copy(element);
     this->radius = element.radius;
     this->color = element.color;
-    this->stroke = element.stroke;
+    this->stroke_width = element.stroke_width;
 }
 
 void Circle::draw(cairo_t *cr, float t)
@@ -54,14 +54,14 @@ void Circle::draw(cairo_t *cr, float t)
     float b = std::get<2>(this->color);
     cairo_set_source_rgba(cr, r, g, b, opacity);
     cairo_arc(cr, x, y, radius, 0, 2 * M_PI);
-    if (stroke == 0)
+    if (stroke_width == 0)
     {
         cairo_fill(cr);
     }
     else
     {
-        float stroke_width = this->get_x(stroke);
-        cairo_set_line_width(cr, stroke_width);
+        float sw = this->get_x(stroke_width);
+        cairo_set_line_width(cr, sw);
         cairo_stroke(cr);
     }
 }
@@ -70,7 +70,7 @@ void Circle::draw(cairo_t *cr, float t)
 // Rectangle class
 // ============================================================================
 
-Rectangle::Rectangle(float x, float y, float width, float height, const std::string color, float opacity, bool responsive, char *align, int z_index)
+Rectangle::Rectangle(float x, float y, float width, float height, const std::string color, float opacity, float border_radius, bool responsive, char *align, int z_index, float stroke_width)
 {
     this->x = x;
     this->y = y;
@@ -78,9 +78,11 @@ Rectangle::Rectangle(float x, float y, float width, float height, const std::str
     this->height = height;
     this->color = hex_to_rgb(color);
     this->opacity = opacity;
+    this->border_radius = border_radius;
     this->z_index = z_index;
     this->align = parse_alignment(align);
     this->responsive = responsive;
+    this->stroke_width = stroke_width;
 }
 
 Rectangle::Rectangle(const Rectangle &element)
@@ -88,7 +90,9 @@ Rectangle::Rectangle(const Rectangle &element)
     this->copy(element);
     this->width = element.width;
     this->height = element.height;
+    this->border_radius = element.border_radius;
     this->color = element.color;
+    this->stroke_width = element.stroke_width;
 }
 
 void Rectangle::draw(cairo_t *cr, float t)
@@ -100,6 +104,7 @@ void Rectangle::draw(cairo_t *cr, float t)
     attributes["width"] = this->width;
     attributes["height"] = this->height;
     attributes["opacity"] = this->opacity;
+    attributes["border_radius"] = this->border_radius;
     this->at(attributes, t);
 
     // get main attributes
@@ -107,6 +112,7 @@ void Rectangle::draw(cairo_t *cr, float t)
     float y = this->get_y(attributes["y"]);
     float width = this->get_x(attributes["width"]);
     float height = this->get_y(attributes["height"]);
+    float radius = this->get_x(attributes["border_radius"]) * height / 20;
     float opacity = attributes["opacity"];
 
     // return conditions
@@ -121,8 +127,47 @@ void Rectangle::draw(cairo_t *cr, float t)
     float g = std::get<1>(this->color);
     float b = std::get<2>(this->color);
     cairo_set_source_rgba(cr, r, g, b, opacity);
-    cairo_rectangle(cr, x, y, width, height);
-    cairo_fill(cr);
+    if (radius == 0)
+    {
+        cairo_rectangle(cr, x, y, width, height);
+    }
+    else
+    {
+        float deg = M_PI / 180.0;
+        cairo_arc(cr,
+                  x + width - radius,
+                  y + radius,
+                  radius,
+                  -90 * deg, 0 * deg);
+        cairo_arc(cr,
+                  x + width - radius,
+                  y + height - radius,
+                  radius,
+                  0 * deg, 90 * deg);
+        cairo_arc(cr,
+                  x + radius,
+                  y + height - radius,
+                  radius,
+                  90 * deg,
+                  180 * deg);
+        cairo_arc(cr,
+                  x + radius,
+                  y + radius, radius,
+                  180 * deg,
+                  270 * deg);
+        cairo_close_path(cr);
+    }
+
+    if (stroke_width == 0)
+    {
+        cairo_fill(cr);
+    }
+    else
+    {
+        float sw = this->get_x(stroke_width);
+        cairo_set_line_width(cr, sw);
+        cairo_stroke(cr);
+    }
 }
 
 // ============================================================================

@@ -119,4 +119,6 @@ dmypy.json
 **/*.json
 **/*.dat
 **/*.npy
+**/*.png
+**/*.svg
 **/render/

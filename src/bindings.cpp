@@ -81,16 +81,18 @@ PYBIND11_MODULE(cmotion, m)
              py::arg("z_index") = 0,
              py::arg("stroke_width") = 0);
     py::class_<Rectangle, Element>(m_shape, "Rectangle")
-        .def(py::init<float, float, float, float, std::string, float, bool, char *, int>(),
+        .def(py::init<float, float, float, float, std::string, float, float, bool, char *, int, float>(),
              py::arg("x") = 50,
              py::arg("y") = 50,
              py::arg("width") = 50,
              py::arg("height") = 50,
              py::arg("color") = "#FFFFFF",
              py::arg("opacity") = 1,
+             py::arg("border_radius") = 0,
              py::arg("responsive") = true,
              py::arg("align") = "center",
-             py::arg("z_index") = 0);
+             py::arg("z_index") = 0,
+             py::arg("stroke_width") = 0);
 
     py::class_<Line, Element>(m_shape, "Line")
         .def(py::init<std::vector<float> &, std::vector<float> &, float, int, std::string, float, double, bool, char *, int>(),
