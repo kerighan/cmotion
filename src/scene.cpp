@@ -16,7 +16,16 @@ Scene::Scene(int width, int height, const std::string color)
 {
     this->width = width;
     this->height = height;
-    this->color = hex_to_rgb(color);
+    if (color.length() == 0)
+    {
+        this->color = hex_to_rgb("#FFFFFF");
+        this->background = false;
+    }
+    else
+    {
+        this->color = hex_to_rgb(color);
+        this->background = true;
+    }
 }
 
 void Scene::add(Element *element)
@@ -59,9 +68,12 @@ void Scene::at(cairo_t *cr, float t)
     float b = std::get<2>(this->color);
 
     // add background
-    cairo_rectangle(cr, 0, 0, this->width, this->height);
-    cairo_set_source_rgb(cr, r, g, b);
-    cairo_fill(cr);
+    if (this->background)
+    {
+        cairo_rectangle(cr, 0, 0, this->width, this->height);
+        cairo_set_source_rgb(cr, r, g, b);
+        cairo_fill(cr);
+    }
 
     // render frame
     for (size_t j = 0; j < this->layers.size(); j++)
@@ -72,7 +84,6 @@ void Scene::at(cairo_t *cr, float t)
 
 void Scene::save(std::string filename, float t)
 {
-
     // create surface and context
     cairo_surface_t *surface;
     cairo_t *cr;

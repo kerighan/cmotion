@@ -22,4 +22,5 @@ private:
     Color color;
     int width;
     int height;
+    bool background;
 };

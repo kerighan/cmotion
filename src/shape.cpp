@@ -53,6 +53,8 @@ void Circle::draw(cairo_t *cr, float t)
     float g = std::get<1>(this->color);
     float b = std::get<2>(this->color);
     cairo_set_source_rgba(cr, r, g, b, opacity);
+
+    cairo_move_to(cr, x + radius, y);
     cairo_arc(cr, x, y, radius, 0, 2 * M_PI);
     if (stroke_width == 0)
     {
@@ -112,7 +114,8 @@ void Rectangle::draw(cairo_t *cr, float t)
     float y = this->get_y(attributes["y"]);
     float width = this->get_x(attributes["width"]);
     float height = this->get_y(attributes["height"]);
-    float radius = this->get_x(attributes["border_radius"]) * height / 20;
+    // float radius = this->get_x(attributes["border_radius"]) * height / 20;
+    float radius = attributes["border_radius"];
     float opacity = attributes["opacity"];
 
     // return conditions
@@ -134,6 +137,7 @@ void Rectangle::draw(cairo_t *cr, float t)
     else
     {
         float deg = M_PI / 180.0;
+        cairo_move_to(cr, x, y);
         cairo_arc(cr,
                   x + width - radius,
                   y + radius,

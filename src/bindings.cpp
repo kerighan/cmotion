@@ -20,7 +20,7 @@ PYBIND11_MODULE(cmotion, m)
         .def(py::init<int, int, std::string>(),
              py::arg("width") = 1000,
              py::arg("height") = 1000,
-             py::arg("color") = "#232323")
+             py::arg("color") = "")
         .def("add", &Scene::add)
         .def("get_end", &Scene::get_end)
         .def("resize", &Scene::resize)
