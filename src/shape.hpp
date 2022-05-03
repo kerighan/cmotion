@@ -5,7 +5,7 @@
 class Circle : public Element
 {
 public:
-    Circle(float x, float y, float radius, std::string color, float opacity, bool responsive, char *align, int z_index, float stroke_width);
+    Circle(float x, float y, float radius, std::string color, float opacity, bool responsive, char *align, int z_index, float stroke_width, float angle, float phase);
     Circle(const Circle &circle);
     Circle *clone() override { return new Circle(*this); }
 
@@ -15,6 +15,8 @@ private:
     float radius;
     Color color;
     float stroke_width;
+    float angle;
+    float phase;
 };
 
 class Rectangle : public Element

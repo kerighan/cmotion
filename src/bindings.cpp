@@ -70,7 +70,7 @@ PYBIND11_MODULE(cmotion, m)
 
     // shape submodule
     py::class_<Circle, Element>(m_shape, "Circle")
-        .def(py::init<float, float, float, std::string, float, bool, char *, int, float>(),
+        .def(py::init<float, float, float, std::string, float, bool, char *, int, float, float, float>(),
              py::arg("x") = 50,
              py::arg("y") = 50,
              py::arg("radius") = 1,
@@ -79,7 +79,9 @@ PYBIND11_MODULE(cmotion, m)
              py::arg("responsive") = true,
              py::arg("align") = "center",
              py::arg("z_index") = 0,
-             py::arg("stroke_width") = 0);
+             py::arg("stroke_width") = 0,
+             py::arg("angle") = 360,
+             py::arg("phase") = 0);
     py::class_<Rectangle, Element>(m_shape, "Rectangle")
         .def(py::init<float, float, float, float, std::string, float, float, bool, char *, int, float>(),
              py::arg("x") = 50,
