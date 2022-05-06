@@ -75,6 +75,82 @@ void Circle::draw(cairo_t *cr, float t)
 }
 
 // ============================================================================
+// Hexagon class
+// ============================================================================
+
+Hexagon::Hexagon(float x, float y, float radius, const std::string color, float opacity, bool responsive, char *align, int z_index, float stroke_width)
+{
+    this->x = x;
+    this->y = y;
+    this->radius = radius;
+    this->color = hex_to_rgb(color);
+    this->opacity = opacity;
+    this->z_index = z_index;
+    this->align = parse_alignment(align);
+    this->responsive = responsive;
+    this->stroke_width = stroke_width;
+}
+
+Hexagon::Hexagon(const Hexagon &element)
+{
+    this->copy(element);
+    this->radius = element.radius;
+    this->color = element.color;
+    this->stroke_width = element.stroke_width;
+}
+
+void Hexagon::draw(cairo_t *cr, float t)
+{
+    // compute default attributes
+    Attributes attributes;
+    attributes["x"] = this->x;
+    attributes["y"] = this->y;
+    attributes["radius"] = this->radius;
+    attributes["opacity"] = this->opacity;
+    this->at(attributes, t);
+
+    // get main attributes
+    float x = this->get_x(attributes["x"]);
+    float y = this->get_y(attributes["y"]);
+    float radius = this->get_x(attributes["radius"]);
+    float opacity = attributes["opacity"];
+
+    // return conditions
+    if (radius <= 0 || opacity == 0)
+        return;
+
+    // draw Rectangle
+    float r = std::get<0>(this->color);
+    float g = std::get<1>(this->color);
+    float b = std::get<2>(this->color);
+    cairo_set_source_rgba(cr, r, g, b, opacity);
+
+    float angle = M_PI / 6;
+    for (size_t i = 0; i < 6; i++)
+    {
+        float x_ = x + radius * cos(angle);
+        float y_ = y + radius * sin(angle);
+        if (i == 0)
+            cairo_move_to(cr, x_, y_);
+        else
+            cairo_line_to(cr, x_, y_);
+        angle += M_PI / 3;
+    }
+    cairo_close_path(cr);
+
+    if (stroke_width == 0)
+    {
+        cairo_fill(cr);
+    }
+    else
+    {
+        float sw = this->get_x(stroke_width);
+        cairo_set_line_width(cr, sw);
+        cairo_stroke(cr);
+    }
+}
+
+// ============================================================================
 // Rectangle class
 // ============================================================================
 
@@ -120,7 +196,6 @@ void Rectangle::draw(cairo_t *cr, float t)
     float y = this->get_y(attributes["y"]);
     float width = this->get_x(attributes["width"]);
     float height = this->get_y(attributes["height"]);
-    // float radius = this->get_x(attributes["border_radius"]) * height / 20;
     float radius = attributes["border_radius"];
     float opacity = attributes["opacity"];
 

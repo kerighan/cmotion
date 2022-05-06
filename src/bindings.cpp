@@ -95,6 +95,17 @@ PYBIND11_MODULE(cmotion, m)
              py::arg("align") = "center",
              py::arg("z_index") = 0,
              py::arg("stroke_width") = 0);
+    py::class_<Hexagon, Element>(m_shape, "Hexagon")
+        .def(py::init<float, float, float, std::string, float, bool, char *, int, float>(),
+             py::arg("x") = 50,
+             py::arg("y") = 50,
+             py::arg("radius") = 50,
+             py::arg("color") = "#FFFFFF",
+             py::arg("opacity") = 1,
+             py::arg("responsive") = true,
+             py::arg("align") = "center",
+             py::arg("z_index") = 0,
+             py::arg("stroke_width") = 0);
 
     py::class_<Line, Element>(m_shape, "Line")
         .def(py::init<std::vector<float> &, std::vector<float> &, float, int, std::string, float, double, bool, char *, int>(),

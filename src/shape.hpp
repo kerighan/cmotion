@@ -19,6 +19,20 @@ private:
     float phase;
 };
 
+class Hexagon : public Element
+{
+public:
+    Hexagon(float x, float y, float radius, std::string color, float opacity, bool responsive, char *align, int z_index, float stroke_width);
+    Hexagon(const Hexagon &element);
+    Hexagon *clone() override { return new Hexagon(*this); }
+    void draw(cairo_t *cr, float t) override;
+
+private:
+    float radius;
+    float stroke_width;
+    Color color;
+};
+
 class Rectangle : public Element
 {
 public:
