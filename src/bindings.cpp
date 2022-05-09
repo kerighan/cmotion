@@ -120,6 +120,19 @@ PYBIND11_MODULE(cmotion, m)
              py::arg("align") = "center",
              py::arg("z_index") = 0);
 
+    py::class_<Polygon, Element>(m_shape, "Polygon")
+        .def(py::init<std::vector<float> &, std::vector<float> &, float, int, std::string, float, double, bool, char *, int>(),
+             py::arg("x"),
+             py::arg("y"),
+             py::arg("stroke_width") = 0,
+             py::arg("cap") = 0,
+             py::arg("color") = "#FFFFFF",
+             py::arg("opacity") = 1,
+             py::arg("dotted") = 0,
+             py::arg("responsive") = true,
+             py::arg("align") = "center",
+             py::arg("z_index") = 0);
+
     py::class_<Curve, Element>(m_shape, "Curve")
         .def(py::init<std::vector<float> &, std::vector<float> &, float, int, std::string, float, double, bool, char *, int, float>(),
              py::arg("x"),

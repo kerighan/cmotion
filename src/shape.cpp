@@ -471,3 +471,113 @@ void Curve::draw(cairo_t *cr, float t)
 
     cairo_stroke(cr);
 }
+
+// ============================================================================
+// Polygon class
+// ============================================================================
+
+Polygon::Polygon(
+    std::vector<float> &x,
+    std::vector<float> &y,
+    float stroke_width,
+    int cap,
+    const std::string color,
+    float opacity,
+    double dotted,
+    bool responsive,
+    char *align,
+    int z_index)
+{
+    this->x_pos = x;
+    this->y_pos = y;
+    this->stroke_width = stroke_width;
+    this->color = hex_to_rgb(color);
+    this->opacity = opacity;
+    this->z_index = z_index;
+    this->align = parse_alignment(align);
+    this->responsive = responsive;
+    this->dotted = dotted;
+
+    switch (cap)
+    {
+    case 1:
+        this->cap = CAIRO_LINE_CAP_ROUND;
+        break;
+    case 2:
+        this->cap = CAIRO_LINE_CAP_SQUARE;
+        break;
+    default:
+        this->cap = CAIRO_LINE_CAP_BUTT;
+        break;
+    }
+}
+
+Polygon::Polygon(const Polygon &element)
+{
+    this->copy(element);
+    this->x_pos = element.x_pos;
+    this->y_pos = element.y_pos;
+    this->stroke_width = element.stroke_width;
+    this->color = element.color;
+    this->cap = element.cap;
+    this->dotted = element.dotted;
+}
+
+void Polygon::draw(cairo_t *cr, float t)
+{
+    // compute default attributes
+    Attributes attributes;
+    attributes["stroke_width"] = this->stroke_width;
+    attributes["opacity"] = this->opacity;
+    this->at(attributes, t);
+
+    // get main attributes
+    float stroke_width = this->get_x(attributes["stroke_width"]);
+    float opacity = attributes["opacity"];
+
+    // return conditions
+    if (opacity == 0)
+        return;
+
+    // number of points
+    size_t n_points = this->x_pos.size();
+    if (n_points <= 1)
+        return;
+
+    // draw lines
+    float r = std::get<0>(this->color);
+    float g = std::get<1>(this->color);
+    float b = std::get<2>(this->color);
+    cairo_set_source_rgba(cr, r, g, b, opacity);
+    cairo_set_line_cap(cr, this->cap);
+    cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
+    cairo_set_line_width(cr, stroke_width);
+
+    // dotted pattern
+    if (this->dotted > 0)
+    {
+        double dash[1] = {this->dotted * stroke_width};
+        cairo_set_dash(cr, dash, 1, 0);
+    }
+
+    cairo_move_to(cr, this->get_x(x_pos[0]), this->get_y(y_pos[0]));
+    for (size_t i = 1; i < n_points; i++)
+    {
+        cairo_line_to(cr, this->get_x(x_pos[i]), this->get_y(y_pos[i]));
+    }
+    cairo_close_path(cr);
+
+    if (stroke_width > 0)
+    {
+        cairo_stroke(cr);
+        // clear pattern
+        if (this->dotted > 0)
+        {
+            cairo_set_dash(cr, {}, 0, 0);
+        }
+    }
+    else
+    {
+        cairo_fill(cr);
+    }
+}

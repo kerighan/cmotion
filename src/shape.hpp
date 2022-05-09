@@ -87,3 +87,21 @@ private:
     cairo_line_cap_t cap;
     float curvature;
 };
+
+class Polygon : public Element
+{
+public:
+    Polygon(std::vector<float> &x, std::vector<float> &y, float stroke_width, int cap, std::string color, float opacity, double dotted, bool responsive, char *align, int z_index);
+    Polygon(const Polygon &element);
+    Polygon *clone() override { return new Polygon(*this); }
+
+    void draw(cairo_t *cr, float t) override;
+
+private:
+    std::vector<float> x_pos;
+    std::vector<float> y_pos;
+    float stroke_width;
+    double dotted;
+    Color color;
+    cairo_line_cap_t cap;
+};
