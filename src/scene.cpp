@@ -28,6 +28,37 @@ Scene::Scene(int width, int height, const std::string color)
     }
 }
 
+Scene::~Scene() {
+    for (auto elem : layers) {
+        delete elem;
+    }
+}
+
+Scene::Scene(const Scene& other) : width(other.width), height(other.height), color(other.color), background(other.background) {
+    layers.reserve(other.layers.size());
+    for (Element* elem : other.layers) {
+        layers.push_back(elem->clone());
+    }
+}
+
+Scene& Scene::operator=(const Scene& other) {
+    if (this != &other) {
+        for (Element* elem : layers) {
+            delete elem;
+        }
+        layers.clear();
+        layers.reserve(other.layers.size());
+        for (Element* elem : other.layers) {
+            layers.push_back(elem->clone());
+        }
+        width = other.width;
+        height = other.height;
+        color = other.color;
+        background = other.background;
+    }
+    return *this;
+}
+
 void Scene::add(Element *element)
 {
     Element *elem = element->clone();

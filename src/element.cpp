@@ -13,6 +13,11 @@ Element::Element(){
     this->responsive = true;
 }
 
+Element::~Element() {
+    // Currently, there's nothing to clean up because this class
+    // doesn't manage any dynamic resources directly.
+    // This destructor is here for completeness and future-proofing.
+}
 
 Element::Element(const Element& element){
     this->screen_width = element.screen_width;

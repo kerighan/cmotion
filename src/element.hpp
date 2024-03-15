@@ -44,7 +44,9 @@ class Element
 public:
     Element();
     Element(const Element& elem);
+    ~Element(); // Declare the destructor
     virtual Element* clone(){ return new Element(*this); };
+    // virtual Element* clone() const = 0;
     void copy(const Element& element);
 
     void add(Timeline& timeline);

@@ -34,10 +34,36 @@ Font::Font(char *filename)
     this->font = font_;
 }
 
-// Font::~Font()
-// {
-//     delete this->font;
-// }
+Font::~Font() {
+    if (font) {
+        cairo_font_face_destroy(font);
+        FT_Done_Face(face);
+        FT_Done_FreeType(library);
+    }
+}
+
+Font::Font(Font&& other) noexcept
+    : font(other.font), face(other.face), library(other.library) {
+    other.font = nullptr;
+    // It might not be necessary or possible to "nullify" the FT_Face and FT_Library
+    // since they're not pointers. Instead, ensure they're not used in a destructed state.
+}
+
+Font& Font::operator=(Font&& other) noexcept {
+    if (this != &other) {
+        if (font) {
+            cairo_font_face_destroy(font);
+            FT_Done_Face(face);
+            FT_Done_FreeType(library);
+        }
+        font = other.font;
+        face = other.face;
+        library = other.library;
+        other.font = nullptr;
+        // Again, resetting FT_Face and FT_Library might not apply
+    }
+    return *this;
+}
 
 Text::Text(std::string &txt, float x, float y, float width, float size, float line_height, float space_size, char *filename, const std::string color, float opacity, bool responsive, char *align, int z_index, Font *font_obj)
 {

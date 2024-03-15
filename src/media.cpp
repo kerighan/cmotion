@@ -38,6 +38,14 @@ Image::Image(char *src, float x, float y, float width, float height, float opaci
     }
 }
 
+Image::~Image()
+{
+    if (this->image != nullptr)
+    {
+        cairo_surface_destroy(this->image);
+    }
+}
+
 Image::Image(const Image &element)
 {
     this->copy(element);
@@ -47,6 +55,11 @@ Image::Image(const Image &element)
     this->hide_overflow = element.hide_overflow;
     this->circle_mask = element.circle_mask;
     this->image = element.image;
+    // if (element.image != nullptr) {
+    //     this->image = cairo_surface_reference(element.image);
+    // } else {
+    //     this->image = nullptr;
+    // }
 }
 
 void Image::draw(cairo_t *cr, float t)

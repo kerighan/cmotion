@@ -1,6 +1,13 @@
 #include <cairo.h>
 #include "element.hpp"
 #include "utils.hpp"
+#include <ft2build.h>
+#include FT_SFNT_NAMES_H
+#include FT_FREETYPE_H
+#include FT_GLYPH_H
+#include FT_OUTLINE_H
+#include FT_BBOX_H
+#include FT_TYPE1_TABLES_H
 
 // ============================================================================
 // Models
@@ -29,8 +36,21 @@ class Font
 {
 public:
     Font(char *filename);
+    // Destructor to release resources
+    ~Font();
+    // Copy constructor
+    Font(const Font& other) = delete; // Disabling copy operations
+    // Copy assignment operator
+    Font& operator=(const Font& other) = delete; // Disabling copy operations
+
+    // Move constructor
+    Font(Font&& other) noexcept;
+    // Move assignment operator
+    Font& operator=(Font&& other) noexcept;
+
     cairo_font_face_t *font;
-    // ~Font();
+    FT_Face face; // FreeType face
+    FT_Library library; // FreeType library
 };
 
 class Text : public Element
