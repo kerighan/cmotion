@@ -181,12 +181,11 @@ void Text::on_resize()
     float space_size = this->space_size * size;
     float line_height = size * this->line_height;
 
-    // get line model
-    LinesModel txt = get_text_model(cr, this->align, x, y, this->tokens, width, line_height, space_size);
-
-    // update n_lines
-    this->n_lines = txt.size();
-    this->lines_model = txt;
+    // // get line model
+    // LinesModel txt = get_text_model(cr, this->align, x, y, this->tokens, width, line_height, space_size);
+    // // update n_lines
+    // this->n_lines = txt.size();
+    // this->lines_model = txt;
 
     cairo_destroy(cr);
     cairo_surface_destroy(surface);
@@ -203,10 +202,6 @@ void Text::draw(cairo_t *cr, float t)
     float y = attributes["y"];
     float width = attributes["width"];
     float size = attributes["size"];
-
-    // return conditions
-    if (width <= 0 || opacity == 0)
-        return;
 
     // select color
     float r = std::get<0>(this->color);
@@ -355,6 +350,7 @@ LinesModel get_text_model(cairo_t *cr, layout::position align, float x, float y,
     std::vector<float> lines_width;
     for (auto &line : lines)
     {
+        std::cout << "newline" << std::endl;
         float line_width = 0;
         tokens.clear();
         for (auto &word : line)
@@ -367,6 +363,7 @@ LinesModel get_text_model(cairo_t *cr, layout::position align, float x, float y,
             token.width = word_te.width;
             token.height = word_te.height;
             token.token = word;
+            std::cout << "token: " << token.token << std::endl;
 
             if (token.width + space_size + line_width <= width)
             {
