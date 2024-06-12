@@ -350,7 +350,6 @@ LinesModel get_text_model(cairo_t *cr, layout::position align, float x, float y,
     std::vector<float> lines_width;
     for (auto &line : lines)
     {
-        std::cout << "newline" << std::endl;
         float line_width = 0;
         tokens.clear();
         for (auto &word : line)
@@ -363,7 +362,6 @@ LinesModel get_text_model(cairo_t *cr, layout::position align, float x, float y,
             token.width = word_te.width;
             token.height = word_te.height;
             token.token = word;
-            std::cout << "token: " << token.token << std::endl;
 
             if (token.width + space_size + line_width <= width)
             {
