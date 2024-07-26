@@ -6,8 +6,8 @@ from setuptools import Extension, find_packages, setup
 
 
 def pkgconfig(pkg, kw):
-    flag_map = {'-I': 'include_dirs', '-L': 'library_dirs', '-l': 'libraries'}
-    output = subprocess.getoutput('pkg-config --cflags --libs {}'.format(pkg))
+    flag_map = {"-I": "include_dirs", "-L": "library_dirs", "-l": "libraries"}
+    output = subprocess.getoutput("pkg-config --cflags --libs {}".format(pkg))
     assert "not found" not in output
     for token in output.strip().split():
         kw.setdefault(flag_map.get(token[:2]), []).append(token[2:])
@@ -15,17 +15,16 @@ def pkgconfig(pkg, kw):
 
 
 extension_kwargs = pkgconfig(
-    'cairo libjpeg freetype2', dict(
-        language='c++',
-        include_dirs=[
-            pybind11.get_include(),
-            pybind11.get_include(True)],
-        extra_compile_args=["-Ofast"]))
+    "cairo libjpeg freetype2",
+    dict(
+        language="c++",
+        include_dirs=[pybind11.get_include(), pybind11.get_include(True)],
+        extra_compile_args=["-Ofast", "-v"],
+    ),
+)
 
 
-ext_modules = [
-    Extension('cmotion', sorted(glob("src/*.cpp")), **extension_kwargs)
-]
+ext_modules = [Extension("cmotion", sorted(glob("src/*.cpp")), **extension_kwargs)]
 
 
 setup(
@@ -33,5 +32,5 @@ setup(
     version="0.0.0",
     packages=find_packages(),
     include_package_data=True,
-    ext_modules=ext_modules
+    ext_modules=ext_modules,
 )
